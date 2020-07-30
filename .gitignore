@@ -1,5 +1,5 @@
 generator/sf2/*
-generator/ruby/soundfont*
+#generator/ruby/soundfont*
 **/source*
 **/build*
 */soundfont/*
