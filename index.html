@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<html>
+    <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+      <!-- css -->
+      <link href="./css/Basic.css" rel="stylesheet" text="text/css"/>
+      <!-- visual display -->
+      <div class="flex-container-horiz">
+        <div class="flex-container-vert">
+
+          <canvas id="strum0" onclick="DRAWGUITAR.onStrum(0)" width="1" height="1"></canvas>
+          <canvas id="strum1" onclick="DRAWGUITAR.onStrum(1)" width="1" height="1"></canvas>
+          <canvas id="strum2" onclick="DRAWGUITAR.onStrum(2)" width="1" height="1"></canvas>
+          <canvas id="strum3" onclick="DRAWGUITAR.onStrum(3)" width="1" height="1"></canvas>
+          <canvas id="strum4" onclick="DRAWGUITAR.onStrum(4)" width="1" height="1"></canvas>
+          <canvas id="strum5" onclick="DRAWGUITAR.onStrum(5)" width="1" height="1"></canvas>
+        </div>
+        <div class="flex-container-vert" style="margin-left: 60px;">
+          <button id="start" onclick="start()" width="500" height="500">Start</button>
+			    <div style="font: italic  bold 18px Arial;margin-left: 15px">
+				    You are playing:
+			    </div>
+			    <div id="chordName" style="font: italic  bold 48px Arial;margin-left: 15px;text-align: center;">
+				    &#8205;
+			    </div>
+			      <canvas id="fretBoard" width="340" height="400" style="border:0px solid #000000;">
+                Your browser does not support the HTML5 canvas tag.</canvas>
+            <canvas id="strummer" width="300" height="200" style="border:0px solid #d3d3d3;">
+				        Your browser does not support the HTML5 canvas tag.</canvas>
+        </div>
+        <div class="flex-container-vert" style="margin-left: 60px;display: block;">
+          <img src="./images/BrownEyedGirlSheet.png" alt="Future update will include alternative text."/>
+        </div>
+      </div>
+      <!-- polyfill -->
+      <script src="../inc/shim/Base64.js" type="text/javascript"></script>
+      <script src="../inc/shim/Base64binary.js" type="text/javascript"></script>
+      <script src="../inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+      <!-- midi.js package -->
+      <script src="../js/midi/audioDetect.js" type="text/javascript"></script>
+      <script src="../js/midi/gm.js" type="text/javascript"></script>
+      <script src="../js/midi/loader.js" type="text/javascript"></script>
+      <script src="../js/midi/plugin.audiotag.js" type="text/javascript"></script>
+      <script src="../js/midi/plugin.webaudio.js" type="text/javascript"></script>
+      <script src="../js/midi/plugin.webmidi.js" type="text/javascript"></script>
+      <!-- utils -->
+      <script src="../js/util/dom_request_xhr.js" type="text/javascript"></script>
+      <script src="../js/util/dom_request_script.js" type="text/javascript"></script>
+      <!-- ui code -->
+      <script src="./draw/fretboard.js" type="text/javascript"></script>
+      <!-- arduino scripts -->
+      <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+      <script src="/socket.io/socket.io.js"></script> -->
+
+        <script>
+          
+            DRAWGUITAR.drawFretboard();
+          DRAWGUITAR.drawStrummer();
+          function start() {
+            document.getElementById('start').disabled = true;
+          //intialize to 0 value arrays
+          window.previousFretInput = [0,0,0,0,0,0];
+          window.previousStringInput = [0,0,0,0,0,0];
+           //var socket = io.connect("http://localhost:4000"); //connect to server // ARDUINO
+          //  console.log("hi");
+            //socket.on('emit_serial_data', function(data) { //As a temp data is received // ARDUINO
+          const input = ['{ "frets":[0,2,2,0,3,0], "strummed":[0,1,0,1,0,0] }'];
+          for (var i = 0; i < input.length; i++) {
+
+              var parsedData = JSON.parse(input[i]);
+              var fretInputArray = parsedData.frets;
+              var strummedInputArray = parsedData.strummed;
+
+            //On Strum input
+            for (i = 0; i < strummedInputArray.length; i++) {
+              if(strummedInputArray[i])
+              {
+                document.querySelector('#strum'+i).click(); 
+              }
+             }
+
+             // on press fret
+             for (i = 0; i < strummedInputArray.length; i++) {
+              if(window.previousFretInput[i] != fretInputArray[i])
+                {
+                  //clear the fret position
+                  DRAWGUITAR.onReleaseFret(i);
+                  //press new fret position
+                  DRAWGUITAR.onPressFret(fretInputArray[i], i)
+                }
+              }
+
+              //set current state to old state
+              window.previousFretInput = fretInputArray;
+              window.previousStringInput = strummedInputArray;
+          }
+         //}); //ARDUINO
+
+          }
+
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
+
+
+
+<html><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8"><meta name="Robots" content="NOINDEX " /></head><body></body>
+                <script type="text/javascript">
+                 var gearPage = document.getElementById('GearPage');
+                 if(null != gearPage)
+                 {
+                     gearPage.parentNode.removeChild(gearPage);
+                     document.title = "Error";
+                 }
+                 </script>
+                 </html>
